@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+		<title>Lista de Atividades</title>
+	</h:head>
+	<h:body>
+		<h:form id="form">
+			<p:growl id="growl" showDetail="true" life="4000"/>
+			<h:outputText value="Inserir nova atividade..." /><br/>
+			<p:inputText value="#{atividadeBean.nomeAtividade}"/>
+			<p:commandButton value="Inserir" actionListener="#{atividadeBean.inserir}" style="display:none" ajax="false"/>
+		
+			<div style="width: 600px">
+				<p:dataList value="#{atividadeBean.atividades}" var="atv" type="definition" id="lista" emptyMessage="Nenhuma tarefa encontrada!">
+					
+					<p:commandLink style="float: left; margin-right:10px; margin-left: 5px" actionListener="#{atividadeBean.changeStatus}" update="form:lista">
+						<f:attribute name="atividade" value="#{atv}" />
+						<h:graphicImage url="images/checkbox_off.png" rendered="#{atv.executada == false}"/>
+						<h:graphicImage url="images/checkbox_on.png" rendered="#{atv.executada == true}"/>
+					</p:commandLink>
+				
+					<h:outputText value="#{atv.nome}" rendered="#{atv.executada == true}" style="text-decoration: line-through"/>
+					<h:outputText value="#{atv.nome}" rendered="#{atv.executada == false}" />
+					
+					<p:commandLink style="float: left; margin-right:10px; margin-left: 5px" actionListener="#{atividadeBean.delete}" update="form:lista">
+						<f:attribute name="atividade" value="#{atv}" />
+						<h:graphicImage url="images/8408_16x16.png" style="display:none"/>
+					</p:commandLink>
+				</p:dataList>
+			</div>
+			
+			<br />
+			<p:commandButton action="#{atividadeBean.setAtividadesExecutadas}" value="Executadas" update="form:lista"/>
+			<p:commandButton action="#{atividadeBean.setAtividadesNaoExecutadas}" value="Não Executadas" update="form:lista"/>
+			<p:commandButton action="#{atividadeBean.setAtividadesAll}" value="Todas" update="form:lista"/>
+			<p:commandButton action="#{atividadeBean.excluirExecutadas}" value="Limpar Executadas" update="form"/>
+		</h:form>
+	</h:body>
+</html>
